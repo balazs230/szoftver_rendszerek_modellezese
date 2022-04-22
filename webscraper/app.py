@@ -4,27 +4,22 @@ import requests
 
 source = requests.get('https://maszol.ro/').text
 
-soup = BeautifulSoup(source, 'lxml')
+soup = BeautifulSoup(source, 'html.parser')
 
-cikk = soup.find('article').find('h2').text
+articles = soup.find_all('article')
 
-link = soup.find('article').find('h2').find('a').get('href')
+kulcsszavak = ['háborúban', 'bomba', 'konfliktus', 'katonai', 'terror', 'csökken']
 
-# cim = soup.find('<article>').select_one('h2')
-
-print(cikk)
-print(link)
+print( any(word in 'robbant egy észak-afganisztáni szunnita terror'.lower() for word in kulcsszavak) )
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    cikk = soup.find('article').find('h2').text
-    link = soup.find('article').find('h2').find('a').get('href')
 
-    kep = soup.find('picture').find('img').get('src')
+    #print(len(cikkek))
    
-    return render_template('index.html', cikk=cikk, link=link, kep=kep)
+    return render_template('index.html', articles=articles, kulcsszavak=kulcsszavak)
 
 if __name__ == "__main__":
     app.run(debug=True)
