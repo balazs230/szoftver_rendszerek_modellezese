@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from bs4 import BeautifulSoup, NavigableString
+from bs4 import BeautifulSoup
 import requests
 
 source = requests.get('https://maszol.ro/').text
@@ -8,8 +8,8 @@ soup = BeautifulSoup(source, 'html.parser')
 
 articles = soup.find_all('article')[0:30]
 
-keywords = ['háború', 'bomba', 'konfliktus', 'katona', 'terror', 'kigyulladt', 'villám', 'vihar', 'harc', 'erő', 'halál',
-    'hunyt', 'baleset', 'pusztít', 'akaszt', 'ütköz', 'mély']
+keywords = ['háború', 'bomba', 'konfliktus', 'katona', 'terror', 'kigyulladt', 'villám', 'vihar', 'harc', 'halál',
+    'hunyt', 'baleset', 'pusztít', 'akaszt', 'ütköz']
 checks = []
 
 for article in articles:
