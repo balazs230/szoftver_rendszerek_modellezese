@@ -13,18 +13,18 @@
   <style>
     body {
       padding: 0;
-      background-color: rgb(220, 240, 255);
-      color: black;
+      background-color: #282c34;
+      color: white;
     }
 
     .card {
       position: relative;
-      background-color: #ffffff;
-      border: 1px solid #333;
+      background-color: #282c34;
+      border: 1px solid white;
     }
 
     .card:hover {
-      border: 3px solid rgb(0, 0, 255);
+      border: 3px solid rgb(126, 47, 47);
     } 
 
     .card .card-badge {
@@ -68,7 +68,7 @@
           {% if column['img']['src'] %}
           <img class="card-img-top" src="https://maszol.ro/{{ column['img']['src'] }}" alt="{{ column['img']['alt'] }}" style="width:100%">
           {% else %}
-          <img class="card-img-top" src="http://placehold.jp/150x150.png" alt="image unavailable" style="width:100%">
+          <img class="card-img-top" src="https://i.picsum.photos/id/1073/5472/3648.jpg?hmac=xCDetU9pLnLGZopbvHOQOkQRhTiYwyrzWc0YyHPzp5Y" alt="image unavailable" style="width:100%">
           {% endif %}
           <div class="card-body">
             <h4 class="card-title">{{ column['h2']['a'].text }}</h4> <br>
@@ -76,8 +76,10 @@
           </div>
           {% if column.find_all("p")[-1].get_text() == 'negativ' %}
           <div class="card-badge" title="rossz hír" style="background-color: red;"><span style='font-size:30px;'>&#128577;</span></div>
-          {% else %}
+          {% elif column.find_all("p")[-1].get_text() == 'pozitiv' %}
           <div class="card-badge" title="jó hír" style="background-color: green;"><span style='font-size:30px;'>&#128578;</span></div>
+          {% else %}
+          <div class="card-badge" title="jó hír" style="background-color: yellow;"><span style='font-size:30px;'>&#128528;</span></div>
           {% endif %}
         </div>
         <br>
