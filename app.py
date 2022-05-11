@@ -1,6 +1,8 @@
 from flask import Flask, render_template
 from bs4 import BeautifulSoup
 import requests
+from googletrans import Translator
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 source = requests.get('https://maszol.ro/').text
 
@@ -8,18 +10,32 @@ soup = BeautifulSoup(source, 'html.parser')
 
 articles = soup.find_all('article')[0:20]
 
-neg_keywords = ['háború', 'bomba', 'konfliktus', 'katona', 'terror', 'kigyulladt', 'villám', 'vihar', 'harc', 'halál',
-    'hunyt', 'baleset', 'pusztít', 'akaszt', 'ütköz']
-
-poz_keywords = ['nőtt', 'újít', 'fesztivál', 'ének', 'kiemelkedő', 'boldog', 'örül', 'szép']
-
+# extracting article titles into a list
+titles = []
 for article in articles:
-     h2=', '.join([x.get_text() for x in article.find_all('h2')])
-     if any(word in h2 for word in neg_keywords):
+     title =', '.join([x.get_text() for x in article.find_all('h2')])
+     titles.append(title + '.')
+
+# translate article titles to english
+translator = Translator()
+titles_eng = []
+for title in titles:
+    title_eng = translator.translate(title, src='hu').text
+    titles_eng.append(title_eng)
+
+vader = SentimentIntensityAnalyzer()
+
+# appending label to the articles
+for article in articles:
+     title = ', '.join([x.get_text() for x in article.find_all('h2')]) # extract article title
+     title_eng = translator.translate(title, src='hu').text # translate article title to english
+     analyzed_title = vader.polarity_scores(title_eng)
+     polarity = analyzed_title['compound'] # identify the polarity of the translated title
+     if polarity <= -0.05:
         new_tag = soup.new_tag("p")
         new_tag.append("bad")
         article.append(new_tag)
-     elif any(word in h2 for word in poz_keywords):
+     elif polarity >= 0.05:
         new_tag = soup.new_tag("p")
         new_tag.append("good")
         article.append(new_tag)
@@ -28,9 +44,7 @@ for article in articles:
         new_tag.append("neutral")
         article.append(new_tag)
 
-# for art in articles:
-#     print(type(art))
-
+# filtering articles by the label
 good_articles, bad_articles, neutral_articles = [], [], []
 
 for article in articles:
