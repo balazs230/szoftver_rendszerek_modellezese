@@ -44,7 +44,7 @@ for article in articles:
         new_tag.append("neutral")
         article.append(new_tag)
 
-# filtering articles by the label
+# filtering articles into separate lists by the label
 good_articles, bad_articles, neutral_articles = [], [], []
 
 for article in articles:
