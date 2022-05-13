@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import requests
 from googletrans import Translator
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from pymongo import MongoClient
+import pprint
 
 source = requests.get('https://maszol.ro/').text
 
@@ -55,6 +57,22 @@ for article in articles:
     else:
         neutral_articles.append(article)
 
+# managing MongoDB
+client = MongoClient()
+db = client.news_database
+
+test_data = {"author": "Maszol",
+        "text": "ez egy cikk cime"}
+
+saved_news = db.saved_news
+post_id = saved_news.insert_one(test_data).inserted_id
+
+pprint.pprint(saved_news.find_one({"author": "Maszol"}))
+
+# def save_article():
+#     post_id = saved_news.insert_one(test_data).inserted_id
+
+saved_articles = []
 
 app = Flask(__name__)
 
@@ -73,6 +91,10 @@ def bad_news():
 @app.route('/neutral-news')
 def neutral_news():
     return render_template('index.html', articles=neutral_articles)
+
+@app.route('/saved-news')
+def saved_news():
+    return render_template('saved_news.html', articles=saved_articles)
 
 if __name__ == "__main__":
     app.run(debug=True)

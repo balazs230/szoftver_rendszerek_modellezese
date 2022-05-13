@@ -26,43 +26,16 @@
       <div class="col-lg-10">
         <h1>Pletyka</h1>
         <h4>
-          ...hírek összegyűjtve és osztályozva a Maszol-ról, mesterséges
-          "intelligenciával"
+          az alábbi cikkeket mentettem el későbbre:
         </h4>
         <br />
       </div>
       <div class="col-lg-1">
-        <a href="{{ url_for('saved_news') }}" class="saved_news_button">Mentett cikkeim</a>
+        <a href="/" class="button">Vissza a főoldalra</a>
       </div>
     </div>
 
     <hr style="color: #555; height: 5px" />
-
-    <div class="row text-center">
-      <div class="col-lg-3">
-        <a href="{{ url_for('index') }}" class="btn btn-primary">MINDEN hírt akarok látni</a>
-      </div>
-      <div class="col-lg-3">
-        <a href="{{ url_for('good_news') }}" class="btn btn-success">Csak JÓ híreket akarok látni</a>
-      </div>
-      <div class="col-lg-3">
-        <a href="{{ url_for('bad_news') }}" class="btn btn-danger">Csak ROSSZ híreket akarok látni</a>
-      </div>
-      <div class="col-lg-3">
-        <a href="{{ url_for('neutral_news') }}" class="btn btn-warning">Csak SEMLEGES híreket akarok látni</a>
-      </div>
-    </div>
-
-    {% if request.path == '/good-news' %}
-    <hr style="color: #198754; height: 5px; opacity: 0.5" />
-    {% elif request.path == '/bad-news' %}
-    <hr style="color: #cf3241; height: 5px; opacity: 0.5" />
-    {% elif request.path == '/neutral-news' %}
-    <hr style="color: #ffc107; height: 5px; opacity: 0.5" />
-    {% else %}
-    <hr style="color: #555; height: 5px" />
-    {% endif %}
-    <br />
 
     {% for article in articles|batch(4) %}
     <div class="row">
@@ -81,7 +54,7 @@
             <h4 class="card-title">{{ column['h2']['a'].text }}</h4>
             <br />
             <a href="{{ column['h2']['a']['href'] }}" target="_blank" class="button">elolvasom</a>
-            <a href="#" class="save_button">elmentem</a>
+            <a href="#delete" target="_blank" class="remove_button">eltávolítás a mentettek közül</a>
           </div>
           {% if column.find_all("p")[-1].get_text() == 'bad' %}
           <div class="card-badge" title="rossz hír" style="background-color: #cf3241">
@@ -104,8 +77,6 @@
     </div>
     <br /><br />
     {% endfor %}
-    <a class="weatherwidget-io" href="https://forecast7.com/hu/46d5424d55/targu-mures/" style="border: 2px solid #333; padding: .5rem;"
-      data-label_1="Marosvásárhely" data-label_2="időjárás" data-icons="Climacons Animated" data-days="3" data-theme="pure" >Marosvásárhely időjárás</a>
   </div>
 </body>
 
