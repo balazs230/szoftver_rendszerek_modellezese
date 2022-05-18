@@ -62,6 +62,7 @@
               <div class="col-lg-6">
                 <form action="{{ url_for('remove_one') }}" method="post">
                   <input type="hidden" name="title" value="{{ column['h2']['a'].text }}">
+                  <input type="hidden" name="content" value="{{ column }}">
                   <input type="submit" class="remove_button" value="eltávolítom">
                 </form>
               </div>

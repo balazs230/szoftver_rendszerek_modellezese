@@ -83,6 +83,7 @@ body {
     color: #ffffff;
     padding: 10px 15px;
     text-decoration: none;
+    border: none
 }
 
 .remove_button:hover {

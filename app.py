@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from flask import Flask, redirect, render_template, request
 from bs4 import BeautifulSoup
 import requests
@@ -92,7 +93,7 @@ def save_article():
     saved_article_soup = BeautifulSoup(saved_article_string, 'html.parser')
     article_dict = {'title' : ', '.join([x.get_text() for x in saved_article_soup.find_all('h2')]), 'content' : saved_article_string }
     articles_collection.insert_one(article_dict)
-
+    print('egy cikk hozzaadasa utan: ' + str(len(list(articles_collection.find()))))
     for element in list(articles_collection.find()):
         saved_articles.append(BeautifulSoup(element['content'], 'html.parser'))
 
@@ -103,16 +104,18 @@ def save_article():
     # print(len(saved_articles))
     return redirect('/')
 
-@app.route('/remove-one')
+@app.route('/remove-one', methods=['GET', 'POST'])
 def remove_one():
     articles_collection.delete_one({ "title": request.form['title'] })
+    saved_articles.remove(BeautifulSoup(request.form['content'], 'html.parser'))
+    print('egy eltavolitasa utan: ' + str(len(list(articles_collection.find()))))
     return redirect('/saved-news')
 
 @app.route('/remove-all')
 def remove_all():
     articles_collection.drop()
     saved_articles = []
-    print('dropped')
+    print('osszes eltdobasa utan: ' + str(len(list(articles_collection.find()))))
     return redirect('/')
 
 if __name__ == "__main__":
