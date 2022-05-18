@@ -1,10 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, request
 from bs4 import BeautifulSoup
 import requests
 from googletrans import Translator
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from pymongo import MongoClient
-import pprint
+from flask_cors import CORS
 
 source = requests.get('https://maszol.ro/').text
 
@@ -59,18 +59,8 @@ for article in articles:
 
 # managing MongoDB
 client = MongoClient()
-db = client.news_database
-
-test_data = {"author": "Maszol",
-        "text": "ez egy cikk cime"}
-
-saved_news = db.saved_news
-post_id = saved_news.insert_one(test_data).inserted_id
-
-pprint.pprint(saved_news.find_one({"author": "Maszol"}))
-
-# def save_article():
-#     post_id = saved_news.insert_one(test_data).inserted_id
+articles_db = client["articles_db"]
+articles_collection = articles_db["articles_collection"]
 
 saved_articles = []
 
@@ -94,7 +84,36 @@ def neutral_news():
 
 @app.route('/saved-news')
 def saved_news():
-    return render_template('saved_news.html', articles=saved_articles)
+    return render_template('saved_news.html', articles=list(set(saved_articles)))
+
+@app.route('/save-article', methods=['GET', 'POST'])
+def save_article():
+    saved_article_string = request.form['article']
+    saved_article_soup = BeautifulSoup(saved_article_string, 'html.parser')
+    article_dict = {'title' : ', '.join([x.get_text() for x in saved_article_soup.find_all('h2')]), 'content' : saved_article_string }
+    articles_collection.insert_one(article_dict)
+
+    for element in list(articles_collection.find()):
+        saved_articles.append(BeautifulSoup(element['content'], 'html.parser'))
+
+    # print(type(saved_article_string))
+    # print(articles_db.list_collection_names())
+    # print(x.inserted_id)
+    # saved_articles.append(saved_article_soup)
+    # print(len(saved_articles))
+    return redirect('/')
+
+@app.route('/remove-one')
+def remove_one():
+    articles_collection.delete_one({ "title": request.form['title'] })
+    return redirect('/saved-news')
+
+@app.route('/remove-all')
+def remove_all():
+    articles_collection.drop()
+    saved_articles = []
+    print('dropped')
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)
