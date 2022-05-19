@@ -1,8 +1,11 @@
-from flask import Flask, render_template
+from asyncio.windows_events import NULL
+from flask import Flask, redirect, render_template, request
 from bs4 import BeautifulSoup
 import requests
 from googletrans import Translator
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from pymongo import MongoClient
+from flask_cors import CORS
 
 source = requests.get('https://maszol.ro/').text
 
@@ -44,7 +47,7 @@ for article in articles:
         new_tag.append("neutral")
         article.append(new_tag)
 
-# filtering articles by the label
+# filtering articles into separate lists by the label
 good_articles, bad_articles, neutral_articles = [], [], []
 
 for article in articles:
@@ -55,6 +58,12 @@ for article in articles:
     else:
         neutral_articles.append(article)
 
+# managing MongoDB
+client = MongoClient()
+articles_db = client["articles_db"]
+articles_collection = articles_db["articles_collection"]
+
+saved_articles = []
 
 app = Flask(__name__)
 
@@ -73,6 +82,41 @@ def bad_news():
 @app.route('/neutral-news')
 def neutral_news():
     return render_template('index.html', articles=neutral_articles)
+
+@app.route('/saved-news')
+def saved_news():
+    return render_template('saved_news.html', articles=list(set(saved_articles)))
+
+@app.route('/save-article', methods=['GET', 'POST'])
+def save_article():
+    saved_article_string = request.form['article']
+    saved_article_soup = BeautifulSoup(saved_article_string, 'html.parser')
+    article_dict = {'title' : ', '.join([x.get_text() for x in saved_article_soup.find_all('h2')]), 'content' : saved_article_string }
+    articles_collection.insert_one(article_dict)
+    print('egy cikk hozzaadasa utan: ' + str(len(list(articles_collection.find()))))
+    for element in list(articles_collection.find()):
+        saved_articles.append(BeautifulSoup(element['content'], 'html.parser'))
+
+    # print(type(saved_article_string))
+    # print(articles_db.list_collection_names())
+    # print(x.inserted_id)
+    # saved_articles.append(saved_article_soup)
+    # print(len(saved_articles))
+    return redirect('/')
+
+@app.route('/remove-one', methods=['GET', 'POST'])
+def remove_one():
+    articles_collection.delete_one({ "title": request.form['title'] })
+    saved_articles.remove(BeautifulSoup(request.form['content'], 'html.parser'))
+    print('egy eltavolitasa utan: ' + str(len(list(articles_collection.find()))))
+    return redirect('/saved-news')
+
+@app.route('/remove-all')
+def remove_all():
+    articles_collection.drop()
+    saved_articles = []
+    print('osszes eltdobasa utan: ' + str(len(list(articles_collection.find()))))
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)
