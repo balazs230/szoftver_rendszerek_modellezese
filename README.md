@@ -9,8 +9,8 @@ Flask, BeautifulSoup, Bootstrap, VADER, googletrans, MongoDB
 
 ### Futtatás:
 - függőségek telepítése a requirements.txt fájlból
-- python app.py – a fő állomány futtatása
-- mongod – az adatbázis elindítása
+- ```python app.py``` – a fő állomány futtatása
+- ```mongod``` – az adatbázis elindítása
 
 ### Források
 - https://analyticsindiamag.com/sentiment-analysis-made-easy-using-vader/
