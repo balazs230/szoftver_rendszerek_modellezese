@@ -12,7 +12,7 @@ Flask, BeautifulSoup, Bootstrap, VADER, googletrans, MongoDB
 - python app.py – a fő állomány futtatása
 - mongod – az adatbázis elindítása
 
-###Források
+### Források
 - https://analyticsindiamag.com/sentiment-analysis-made-easy-using-vader/
 - https://github.com/cjhutto/vaderSentiment
 - https://jinja.palletsprojects.com/en/3.1.x/
