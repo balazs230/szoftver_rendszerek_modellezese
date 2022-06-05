@@ -1,4 +1,4 @@
-# szoftver_rendszerek_modellezese
+# Szoftver rendszerek modellezese
 
 A PletykAI egy olyan webes alkalmazás, amely egy híroldal (www.maszol.ro) főoldalát fésüli át (webscraping), onnan összegyűjti a cikkeket, majd az adatok elemzése és feldolgozása után azokat osztályozva megjeleníti.
 
