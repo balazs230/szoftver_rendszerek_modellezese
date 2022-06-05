@@ -7,7 +7,6 @@ body {
 
 .card {
     position: relative;
-    background-color: white;
     border: 1px solid #555;
     text-decoration: none;
     padding: .5rem;
@@ -103,9 +102,4 @@ body {
 
 .card-img-top {
     max-height: 15rem;
-}
-
-.dark-mode {
-    background-color: black !important;
-    color: white;
 }

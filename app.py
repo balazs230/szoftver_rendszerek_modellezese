@@ -13,18 +13,18 @@ soup = BeautifulSoup(source, 'html.parser')
 
 articles = soup.find_all('article')[0:20]
 
-# extracting article titles into a list
-titles = []
-for article in articles:
-     title =', '.join([x.get_text() for x in article.find_all('h2')])
-     titles.append(title + '.')
+# # extracting article titles into a list
+# titles = []
+# for article in articles:
+#      title =', '.join([x.get_text() for x in article.find_all('h2')])
+#      titles.append(title + '.')
 
-# translate article titles to english
+# # translate article titles to english
 translator = Translator()
-titles_eng = []
-for title in titles:
-    title_eng = translator.translate(title, src='hu').text
-    titles_eng.append(title_eng)
+# titles_eng = []
+# for title in titles:
+#     title_eng = translator.translate(title, src='hu').text
+#     titles_eng.append(title_eng)
 
 vader = SentimentIntensityAnalyzer()
 
@@ -96,12 +96,6 @@ def save_article():
     print('egy cikk hozzaadasa utan: ' + str(len(list(articles_collection.find()))))
     for element in list(articles_collection.find()):
         saved_articles.append(BeautifulSoup(element['content'], 'html.parser'))
-
-    # print(type(saved_article_string))
-    # print(articles_db.list_collection_names())
-    # print(x.inserted_id)
-    # saved_articles.append(saved_article_soup)
-    # print(len(saved_articles))
     return redirect('/')
 
 @app.route('/remove-one', methods=['GET', 'POST'])
