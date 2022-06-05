@@ -30,15 +30,13 @@
       <div class="col-lg-10">
         <h1>PletykAI</h1>
         <h4>
-          ...hírek osztályozva, mesterséges intelligencia által.
+          ...hírek intelligensen felcímkézve.
         </h4>
         <br />
       </div>
-      <div class="col-lg-1">
         <div class="col-lg-1">
           <a href="{{ url_for('saved_news') }}" class="saved_news_button">Mentett cikkeim</a>
         </div>
-      </div>
     </div>
 
     <hr style="color: #555; height: 5px" />
@@ -73,7 +71,7 @@
     <div class="row">
       {% for column in article %}
       <div class="col-lg-3 d-flex gap-3">
-        <div class="card">
+        <div class="card" id="card">
           {% if column['img']['src'] %}
           <img class="card-img-top" src="https://maszol.ro/{{ column['img']['src'] }}" alt="{{ column['img']['alt'] }}"
             style="width: 100%" />
@@ -124,12 +122,6 @@
         időjárás</a>
     </div>
   </div>
-
-  <script>
-    document.getElementById("submit").addEventListener("click", function(event){
-      event.preventDefault()
-    });
-  </script>
 </body>
 
 </html>

@@ -25,10 +25,10 @@
       </div>
       <div class="col-lg-9">
         <h1>PletykAI</h1>
-        <h4>
-          az alábbi cikkeket mentettem el későbbre:
-        </h4>
-        <br />
+        <br>
+        <h5>
+          Ezeket a cikkeket mentettem el későbbre
+        </h5>
       </div>
       <div class="col-lg-1">
         <a href="/" class="button">Vissza a főoldalra</a>
@@ -36,6 +36,7 @@
       <div class="col-lg-1">
         <a href="{{ url_for('remove_all') }}" class="remove_button">Összes eltávolítása</a>
       </div>
+      <p class="btn" style="font-size: 2rem;" onclick="myFunction()" title="Dark mode">&#9681;</p>
     </div>
 
     <hr style="color: #555; height: 5px" />
@@ -90,6 +91,13 @@
     <br /><br />
     {% endfor %}
   </div>
+
+  <script>
+    function myFunction() {
+       document.body.classList.toggle("dark-mode");
+       document.getElementById('card').classList.toggle('dark-mode')
+    }
+    </script>
 </body>
 
 </html>

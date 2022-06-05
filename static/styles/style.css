@@ -7,7 +7,6 @@ body {
 
 .card {
     position: relative;
-    background-color: white;
     border: 1px solid #555;
     text-decoration: none;
     padding: .5rem;
