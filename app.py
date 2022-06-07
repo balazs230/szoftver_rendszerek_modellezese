@@ -85,6 +85,8 @@ def neutral_news():
 
 @app.route('/saved-news')
 def saved_news():
+    for element in list(articles_collection.find()):
+        saved_articles.append(BeautifulSoup(element['content'], 'html.parser')) # getting articles from DB converting to BS4 and placing them into a list
     return render_template('saved_news.html', articles=list(set(saved_articles)))
 
 @app.route('/save-article', methods=['GET', 'POST'])
@@ -94,8 +96,6 @@ def save_article():
     article_dict = {'title' : ', '.join([x.get_text() for x in saved_article_soup.find_all('h2')]), 'content' : saved_article_string } # making a dictionary; title=title of article, content=whole <article>
     articles_collection.insert_one(article_dict) # save the article into a Mongo collection
     print('egy cikk hozzaadasa utan: ' + str(len(list(articles_collection.find()))))
-    for element in list(articles_collection.find()):
-        saved_articles.append(BeautifulSoup(element['content'], 'html.parser')) # getting articles from DB converting to BS4 and placing them into a list
     return redirect('/')
 
 @app.route('/remove-one', methods=['GET', 'POST'])
@@ -108,7 +108,7 @@ def remove_one():
 @app.route('/remove-all')
 def remove_all():
     articles_collection.drop()
-    saved_articles = []
+    saved_articles.clear()
     print('osszes eldobasa utan: ' + str(len(list(articles_collection.find()))))
     return redirect('/')
 
