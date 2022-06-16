@@ -34,9 +34,9 @@
         </h4>
         <br />
       </div>
-        <div class="col-lg-1">
+        <!-- <div class="col-lg-1">
           <a href="{{ url_for('saved_news') }}" class="saved_news_button">Mentett cikkeim</a>
-        </div>
+        </div> -->
     </div>
 
     <hr style="color: #555; height: 5px" />
@@ -87,12 +87,12 @@
               <div class="col-lg-6">
                 <a href="{{ column['h2']['a']['href'] }}" target="_blank" class="button">elolvasom</a>
               </div>
-              <div class="col-lg-6">
+              <!-- <div class="col-lg-6">
                 <form action="{{ url_for('save_article') }}" method="post">
                   <input type="hidden" name="article" value="{{ column }}">
                   <input type="submit" class="save_button" id="submit" value="elmentem">
                 </form>
-              </div>
+              </div> -->
             </div>
           </div>
           {% if column.find_all("p")[-1].get_text() == 'bad' %}
