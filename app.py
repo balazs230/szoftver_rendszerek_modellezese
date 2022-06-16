@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from flask import Flask, redirect, render_template, request
 from bs4 import BeautifulSoup
 import requests
